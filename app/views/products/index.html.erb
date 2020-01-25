@@ -1,4 +1,17 @@
 <h1>Products</h1>
 
-<%= @products.inspect %>
-
+<table id="products" class="display">
+  <%= content_tag :table, role: :datatable, data: { url: products_index_path(format: :json)} do %>
+    <thead>
+        <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Country</th>
+        <th>Tags</th>
+        <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  <% end %>
+</table>
