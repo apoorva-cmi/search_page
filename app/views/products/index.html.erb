@@ -1,7 +1,96 @@
+<script>
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
+}
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var value = parseFloat( $('#value').val());
+        var filter = parseFloat( $('#filter').val());
+        var country = $('#country').val();
+
+        var price = parseFloat( data[4] ) || 0;
+        var cvalue = data[2].toLowerCase() || '';
+
+        if ( ((isNaN(value) || isNaN(filter)) && (country.length == 0)) || 
+            (
+            (((filter == '0') && (value <= price)) || 
+            ((filter == '1') && (value >= price)) || 
+            ((filter == '2') && (value == price))) && ((country == cvalue) || (country.length == 0)) ) ||
+            ((isNaN(value) || isNaN(filter)) && ((country == cvalue) || (country.length == 0))) )
+            {
+                return true;
+            }
+            return false;
+        }
+    
+);
+ 
+$(document).ready(function() {
+    var table = $('#example').DataTable();
+    // Event listener
+    $('#value').keyup( function() {
+        table.draw();
+    } );
+
+    $('#country').change( function() {
+        table.draw();
+    } );
+    
+    $('#sort').change( function() {
+        var sort = $('#sort').val();
+        if (sort == '0') {
+            var order = [[4, "asc"]]
+        } else if (sort == '1') {
+            var order = [[4, "desc"]]
+        } else if (sort == '2') {
+            var order = [[5, "desc"]]
+        } else if ((sort == '3') && $('#example_filter label input').val()) {
+            var order = [[0, $('#example_filter label input').val()]]
+        } else {
+            var order = [[0, "desc"]]
+        }
+        var table = $('#example').DataTable({destroy: true, "order": order});
+        table.draw();
+    } );
+} );
+</script>
+
 <h1>Products</h1>
 
-<table id="products" class="display">
-  <%= content_tag :table, role: :datatable, data: { url: products_index_path(format: :json)} do %>
+<select id="filter">
+  <option value="">Select</option>
+  <option value="0" id="min" name="min">Minimum</option>
+  <option value="1" id="max" name="max">Maximum</option>
+  <option value="2" id="equal" name="equal">Equal</option>
+</select> 
+<input type="text" name="value" id="value">
+<br />
+<br />
+<br />
+
+<select id="country">
+  <option value="">Select Country</option>
+  <% @countries.each do |country| %>
+    <option value="<%= country.downcase %>"><%= country %></option>
+  <% end %>
+</select>
+<br />
+<br />
+<br />
+
+<select id="sort">
+  <option value="">Select sorting order</option>
+  <option value="0">Price: Low to High</option>
+  <option value="1">Price: High to Low</option>
+  <option value="2">Sort by newest</option>
+  <option value="3">Sort by relevance</option>
+</select>
+<br />
+<br />
+<br />
+
+<table id="example" class="display" style="width:100%">
     <thead>
         <tr>
         <th>Title</th>
@@ -9,9 +98,19 @@
         <th>Country</th>
         <th>Tags</th>
         <th>Price</th>
+        <th style="display: none;"></th>
         </tr>
     </thead>
     <tbody>
+    <% @products.each do |product| %>
+        <tr>
+            <td> <%= product.title %> </td>
+            <td> <%= product.description %> </td>
+            <td> <%= product.country %> </td>
+            <td> <%= product.tags %> </td>
+            <td> <%= product.price %> </td>
+            <td style="display: none;"> <%= product.created_at %> </td>
+        </tr>
+    <% end %>
     </tbody>
-  <% end %>
 </table>
