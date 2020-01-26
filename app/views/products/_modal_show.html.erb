@@ -1,0 +1,16 @@
+<script>
+    $('.btn-close').click( function(){
+        $('#modal').hide();
+    } );
+</script>
+
+<div class="the-modal">
+    <h5> Product Details </h5>
+    <h3> Title: <%= @product.title %> </h3>
+    <p> Description: <%= @product.description %> </p>
+    <p> Country: <%= @product.country %> </p>
+    <p> Tags: <%= @product.tags %> </p>
+    <p> Price: <%= @product.price %> </p>
+    <button type="button" class="btn-close">Close</button>
+</div>
+

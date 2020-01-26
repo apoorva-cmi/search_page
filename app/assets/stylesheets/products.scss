@@ -1,3 +1,28 @@
 // Place all the styles related to the Products controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.the-modal {
+    position: fixed; /* Stay in place */
+    z-index: 0; /* Sit on top */
+    left: 0;
+    top: 0;
+    margin: 100px;
+    width: 80%;
+    margin: 100px;
+    width: 80%;
+    background-color: #eee;
+    padding: 20px;
+    border: 1px solid #000;
+}
+
+div#filters {
+    width: 100%;
+    padding: 10px 30px 30px 30px;
+    display: block;
+
+    > div {
+        display: inline-block;
+        width: 33%;
+    }
+}
